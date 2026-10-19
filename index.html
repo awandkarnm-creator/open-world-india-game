@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Don't Block Me - Tanishk</title>
+
+<style>
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  color: white;
+  text-align: center;
+  background: linear-gradient(135deg, #10152f, #252c59);
+  min-height: 100vh;
+}
+
+header {
+  padding: 20px 10px;
+  font-size: 27px;
+  font-weight: bold;
+  color: #ffe66d;
+  text-shadow: 0 0 12px #ffb703;
+}
+
+.game {
+  width: 92%;
+  max-width: 480px;
+  margin: 10px auto;
+  padding: 22px 16px;
+  background: #202747;
+  border: 2px solid #5967a5;
+  border-radius: 22px;
+  box-shadow: 0 0 25px #080b20;
+}
+
+h2 {
+  color: #70e1ff;
+}
+
+input {
+  width: 100%;
+  padding: 14px;
+  font-size: 17px;
+  border: none;
+  border-radius: 10px;
+  margin: 12px 0;
+  text-align: center;
+}
+
+button {
+  width: 100%;
+  padding: 14px;
+  margin: 7px 0;
+  font-size: 17px;
+  font-weight: bold;
+  color: white;
+  background: #536dfe;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+button:active {
+  transform: scale(0.97);
+}
+
+button:hover {
+  background: #7185ff;
+}
+
+.option {
+  background: #303b65;
+  border: 1px solid #7887cb;
+}
+
+#progress {
+  color: #ffe66d;
+  margin: 15px 0;
+}
+
+#question {
+  font-size: 21px;
+  min-height: 60px;
+}
+
+#feedback {
+  min-height: 26px;
+  color: #9cffb0;
+  font-weight: bold;
+}
+
+#bears {
+  font-size: 65px;
+  margin: 20px 0;
+}
+
+.bear {
+  display: inline-block;
+  animation: meet 1.2s ease-in-out infinite alternate;
+}
+
+@keyframes meet {
+  from { transform: translateX(-12px); }
+  to { transform: translateX(12px); }
+}
+
+footer {
+  padding: 20px 8px;
+  color: #b9c6ff;
+  font-weight: bold;
+}
+
+.small {
+  color: #cbd2f5;
+  font-size: 14px;
+}
+
+.hidden {
+  display: none;
+}
+</style>
+</head>
+
+<body>
+
+<header>🚫 DON'T BLOCK ME 🚫</header>
+
+<div class="game">
+
+  <!-- START SCREEN -->
+  <section id="start">
+    <div style="font-size:65px">🐻 🎮 🐻</div>
+    <h2>Welcome to the Game!</h2>
+    <p>क्या तुम 10 सवालों का जवाब दे सकते हो?</p>
+
+    <input
+      id="nameInput"
+      type="text"
+      placeholder="अपना नाम लिखो"
+      maxlength="30"
+    >
+
+    <button onclick="startGame()">▶ START GAME</button>
+    <p class="small">सभी सवालों के जवाब दो और भालुओं से मिलो!</p>
+  </section>
+
+  <!-- QUIZ SCREEN -->
+  <section id="quiz" class="hidden">
+    <h2>नमस्ते, <span id="playerName">तनिष्क</span>! 👋</h2>
+
+    <div id="progress">सवाल 1 / 10</div>
+
+    <div id="question"></div>
+
+    <div id="options"></div>
+
+    <div id="feedback"></div>
+    <p id="scoreText">स्कोर: 0</p>
+  </section>
+
+  <!-- RESULT SCREEN -->
+  <section id="result" class="hidden">
+    <h2>🎉 QUIZ COMPLETE! 🎉</h2>
+    <div style="font-size:55px">🏆</div>
+    <h2 id="finalScore"></h2>
+    <p id="resultMessage"></p>
+
+    <button onclick="meetBears()">🐻 भालुओं से मिलो</button>
+  </section>
+
+  <!-- BEAR ENDING -->
+  <section id="ending" class="hidden">
+    <h2>🐻 THE HAPPY ENDING 🐻</h2>
+
+    <div id="bears">
+      <span class="bear">🐻</span>
+      <span class="bear">🐻</span>
+    </div>
+
+    <h2>दोनों भालू मिल गए!</h2>
+
+    <div style="
+      background:#303b65;
+      padding:18px;
+      border-radius:15px;
+      font-size:21px;
+      line-height:1.6;
+    ">
+      भालू 1: अब हम दोस्त हैं! 🤝<br>
+      भालू 2: हाँ, बिल्कुल! ❤️<br><br>
+      <strong style="color:#ffe66d">
+        "मैं तुम्हें ब्लॉक नहीं करूंगा!"
+      </strong>
+    </div>
+
+    <p>🎊 मिशन पूरा हुआ, तनिष्क! 🎊</p>
+
+    <button onclick="restartGame()">🔄 PLAY AGAIN</button>
+  </section>
+
+</div>
+
+<footer>
+  Made by Tanishk Awandkar ❤️
+</footer>
+
+<script>
+const questions = [
+  {
+    q: "1. Minecraft में घर बनाने के लिए क्या चाहिए?",
+    options: ["लकड़ी", "पानी", "बादल", "धुआँ"],
+    answer: 0
+  },
+  {
+    q: "2. सूरज किस दिशा से निकलता है?",
+    options: ["पश्चिम", "उत्तर", "पूर्व", "दक्षिण"],
+    answer: 2
+  },
+  {
+    q: "3. 8 + 7 कितना होता है?",
+    options: ["12", "15", "16", "14"],
+    answer: 1
+  },
+  {
+    q: "4. किस जानवर को जंगल का राजा कहते हैं?",
+    options: ["हाथी", "बिल्ली", "शेर", "खरगोश"],
+    answer: 2
+  },
+  {
+    q: "5. पानी का रासायनिक सूत्र क्या है?",
+    options: ["CO2", "O2", "H2O", "NaCl"],
+    answer: 2
+  },
+  {
+    q: "6. Minecraft में Creeper क्या करता है?",
+    options: ["खाना बनाता है", "धमाका करता है", "उड़ता है", "तैरना सिखाता है"],
+    answer: 1
+  },
+  {
+    q: "7. एक सप्ताह में कितने दिन होते हैं?",
+    options: ["5", "6", "7", "8"],
+    answer: 2
+  },
+  {
+    q: "8. इनमें से कौन-सा ग्रह है?",
+    options: ["चंद्रमा", "मंगल", "ध्रुव तारा", "सूरज"],
+    answer: 1
+  },
+  {
+    q: "9. 5 × 6 कितना होता है?",
+    options: ["25", "30", "35", "20"],
+    answer: 1
+  },
+  {
+    q: "10. दोस्ती में सबसे जरूरी क्या है?",
+    options: [
+      "लड़ाई",
+      "ब्लॉक करना",
+      "भरोसा और सम्मान",
+      "झूठ बोलना"
+    ],
+    answer: 2
+  }
+];
+
+let current = 0;
+let score = 0;
+let locked = false;
+
+function startGame() {
+  // खिलाड़ी का दिखने वाला नाम हमेशा तनिष्क रहेगा।
+  document.getElementById("playerName").textContent = "तनिष्क";
+
+  document.getElementById("start").classList.add("hidden");
+  document.getElementById("quiz").classList.remove("hidden");
+
+  current = 0;
+  score = 0;
+  showQuestion();
+}
+
+function showQuestion() {
+  locked = false;
+
+  const q = questions[current];
+
+  document.getElementById("progress").textContent =
+    "सवाल " + (current + 1) + " / " + questions.length;
+
+  document.getElementById("question").textContent = q.q;
+  document.getElementById("feedback").textContent = "";
+  document.getElementById("scoreText").textContent =
+    "स्कोर: " + score;
+
+  const options = document.getElementById("options");
+  options.innerHTML = "";
+
+  q.options.forEach((option, index) => {
+    const btn = document.createElement("button");
+    btn.textContent = option;
+    btn.className = "option";
+
+    btn.onclick = () => chooseAnswer(index, btn);
+
+    options.appendChild(btn);
+  });
+}
+
+function chooseAnswer(index, btn) {
+  if (locked) return;
+  locked = true;
+
+  const correct = questions[current].answer;
+  const buttons = document.querySelectorAll("#options button");
+
+  buttons.forEach((b, i) => {
+    b.disabled = true;
+
+    if (i === correct) {
+      b.style.background = "#16874a";
+    }
+  });
+
+  if (index === correct) {
+    score++;
+    document.getElementById("feedback").textContent =
+      "✅ सही जवाब! शाबाश!";
+  } else {
+    btn.style.background = "#b73549";
+    document.getElementById("feedback").textContent =
+      "❌ गलत जवाब! कोई बात नहीं।";
+  }
+
+  document.getElementById("scoreText").textContent =
+    "स्कोर: " + score;
+
+  const next = document.createElement("button");
+  next.textContent =
+    current === questions.length - 1
+      ? "🏆 रिजल्ट देखो"
+      : "➡ अगला सवाल";
+
+  next.onclick = () => {
+    current++;
+
+    if (current < questions.length) {
+      showQuestion();
+    } else {
+      showResult();
+    }
+  };
+
+  document.getElementById("options").appendChild(next);
+}
+
+function showResult() {
+  document.getElementById("quiz").classList.add("hidden");
+  document.getElementById("result").classList.remove("hidden");
+
+  document.getElementById("finalScore").textContent =
+    "तनिष्क का स्कोर: " + score + " / 10";
+
+  let message = "";
+
+  if (score === 10) {
+    message = "वाह! पूरे 10 में से 10! तुम Quiz Master हो! 👑";
+  } else if (score >= 7) {
+    message = "बहुत बढ़िया! तुमने शानदार खेला! 🌟";
+  } else if (score >= 4) {
+    message = "अच्छी कोशिश! अगली बार और अच्छा होगा! 💪";
+  } else {
+    message = "कोई बात नहीं! फिर से खेलो और अपना स्कोर बढ़ाओ! 🎮";
+  }
+
+  document.getElementById("resultMessage").textContent = message;
+}
+
+function meetBears() {
+  document.getElementById("result").classList.add("hidden");
+  document.getElementById("ending").classList.remove("hidden");
+}
+
+function restartGame() {
+  document.getElementById("ending").classList.add("hidden");
+  document.getElementById("start").classList.remove("hidden");
+  document.getElementById("nameInput").value = "";
+}
+</script>
+
+</body>
+  </html>
